@@ -136,6 +136,11 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (!isValidPassword(password)) {
+                    Toast.makeText(RegisterActivity.this, "Mật khẩu quá yếu! Phải gồm chữ hoa, chữ thường, số, ký tự đặc biệt và tối thiểu 8 ký tự.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 if (!password.equals(confirmPassword)) {
                     Toast.makeText(RegisterActivity.this, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show();
                     return;
@@ -217,5 +222,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (tvLoginLink != null) tvLoginLink.setOnClickListener(goToLogin);
         if (tvGoToLogin != null) tvGoToLogin.setOnClickListener(goToLogin);
+    }
+
+    private boolean isValidPassword(String password) {
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        return Pattern.compile(passwordPattern).matcher(password).matches();
     }
 }

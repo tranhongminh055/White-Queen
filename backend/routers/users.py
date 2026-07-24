@@ -32,8 +32,15 @@ async def send_otp(request: schemas.SendOTPRequest, db: AsyncIOMotorDatabase = D
     send_otp_email(request.email, otp)
     return {"message": "OTP sent successfully"}
 
+import re
+
 @router.post("/", response_model=schemas.UserResponse)
 async def create_user(user: schemas.UserCreate, db: AsyncIOMotorDatabase = Depends(get_database)):
+    # Validate password strength
+    password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+    if not re.match(password_regex, user.password):
+        raise HTTPException(status_code=400, detail="Mật khẩu quá yếu")
+        
     db_user = await crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
