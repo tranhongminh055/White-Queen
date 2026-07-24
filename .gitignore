@@ -1,0 +1,21 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Android / Gradle
+.gradle/
+gradle-temp/
+build/
+app/build/
+local.properties
+.idea/
+*.iml
+.DS_Store
+
+# Node
+node_modules/
+
+# Database / Large files
+mongodb/
