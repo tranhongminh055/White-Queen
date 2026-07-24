@@ -1,47 +1,40 @@
-import smtplib
 import os
 import random
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import requests
 
 def generate_otp() -> str:
     return str(random.randint(100000, 999999))
 
 def send_otp_email(recipient_email: str, otp: str):
-    sender_email = os.getenv("SMTP_EMAIL")
-    sender_password = os.getenv("SMTP_PASSWORD")
-    
-    if not sender_email or not sender_password or sender_email == "your_email@gmail.com" or sender_password == "your_app_password":
-        print(f"MOCK EMAIL SENT: OTP for {recipient_email} is {otp}")
-        return
-
+    resend_api_key = "re_JhonCSyr_67wAo3TFLdZeac79JDtzsiN9"
     subject = "Mã xác thực tài khoản White Queen"
     body = f"""
-    Xin chào,
-    
-    Bạn đang đăng ký tài khoản trên ứng dụng White Queen.
-    Mã xác thực (OTP) của bạn là: {otp}
-    
-    Vui lòng nhập mã này vào ứng dụng để hoàn tất đăng ký. Mã có hiệu lực trong 10 phút.
-    Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email.
-    
-    Trân trọng,
-    White Queen Team
+    <p>Xin chào,</p>
+    <p>Bạn đang đăng ký tài khoản trên ứng dụng White Queen.</p>
+    <p>Mã xác thực (OTP) của bạn là: <b>{otp}</b></p>
+    <p>Vui lòng nhập mã này vào ứng dụng để hoàn tất đăng ký. Mã có hiệu lực trong 10 phút.</p>
+    <p>Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email.</p>
+    <p>Trân trọng,<br>White Queen Team</p>
     """
 
-    msg = MIMEMultipart()
-    msg['From'] = f"White Queen App <{sender_email}>"
-    msg['To'] = recipient_email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
+    headers = {
+        "Authorization": f"Bearer {resend_api_key}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "from": "White Queen App <onboarding@resend.dev>",
+        "to": [recipient_email],
+        "subject": subject,
+        "html": body
+    }
 
     try:
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=10)
-        server.login(sender_email, sender_password)
-        text = msg.as_string()
-        server.sendmail(sender_email, recipient_email, text)
-        server.quit()
-        print(f"Email sent successfully to {recipient_email}")
+        response = requests.post("https://api.resend.com/emails", json=payload, headers=headers, timeout=15)
+        response.raise_for_status()
+        print(f"Email sent successfully to {recipient_email} via Resend")
     except Exception as e:
-        print(f"Failed to send email to {recipient_email}: {e}")
+        print(f"Failed to send email to {recipient_email} via Resend: {e}")
+        if 'response' in locals() and hasattr(response, 'text'):
+            print(f"Resend error details: {response.text}")
         raise e
