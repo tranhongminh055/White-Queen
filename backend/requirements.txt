@@ -4,3 +4,4 @@ openai
 pydantic[email]
 python-dotenv
 motor
+requests
