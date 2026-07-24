@@ -6,7 +6,7 @@ def generate_otp() -> str:
     return str(random.randint(100000, 999999))
 
 def send_otp_email(recipient_email: str, otp: str):
-    resend_api_key = "re_JhonCSyr_67wAo3TFLdZeac79JDtzsiN9"
+    script_url = "https://script.google.com/macros/s/AKfycbwYzxNzpfcUcdvChf8yh8sOQnhRJfMmTQ3kIT4e0X6xqv7BfOIRMRBXsfvFrzbplMXK4Q/exec"
     subject = "Mã xác thực tài khoản White Queen"
     body = f"""
     <p>Xin chào,</p>
@@ -17,24 +17,16 @@ def send_otp_email(recipient_email: str, otp: str):
     <p>Trân trọng,<br>White Queen Team</p>
     """
 
-    headers = {
-        "Authorization": f"Bearer {resend_api_key}",
-        "Content-Type": "application/json"
-    }
-    
     payload = {
-        "from": "White Queen App <onboarding@resend.dev>",
-        "to": [recipient_email],
+        "to": recipient_email,
         "subject": subject,
-        "html": body
+        "body": body
     }
 
     try:
-        response = requests.post("https://api.resend.com/emails", json=payload, headers=headers, timeout=15)
+        response = requests.post(script_url, json=payload, timeout=15)
         response.raise_for_status()
-        print(f"Email sent successfully to {recipient_email} via Resend")
+        print(f"Email sent successfully to {recipient_email} via Google Apps Script")
     except Exception as e:
-        print(f"Failed to send email to {recipient_email} via Resend: {e}")
-        if 'response' in locals() and hasattr(response, 'text'):
-            print(f"Resend error details: {response.text}")
+        print(f"Failed to send email to {recipient_email} via GAS: {e}")
         raise e
