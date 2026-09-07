@@ -28,6 +28,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.WhiteQueen.NoActionBar"
             android:exported="false" />
             
     </application>

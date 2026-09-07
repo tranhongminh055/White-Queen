@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Xin chào " + response.body().getUsername() + "!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("USERNAME", response.body().getUsername());
+                            intent.putExtra("EMAIL", response.body().getEmail());
                             startActivity(intent);
                             finish();
                         } else {
