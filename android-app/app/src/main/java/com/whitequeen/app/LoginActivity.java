@@ -22,12 +22,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.whitequeen.app.utils.UIUtils;
+
 public class LoginActivity extends AppCompatActivity {
     private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UIUtils.enableFullscreenImmersiveMode(this);
         setContentView(R.layout.activity_login);
 
         Button btnLogin = findViewById(R.id.btnLogin);
@@ -36,6 +39,11 @@ public class LoginActivity extends AppCompatActivity {
         EditText etUsername = findViewById(R.id.etUsername);
         EditText etPassword = findViewById(R.id.etPassword);
         ImageView btnTogglePassword = findViewById(R.id.btnTogglePassword);
+        View btnBack = findViewById(R.id.btnBack);
+
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
 
         btnTogglePassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,5 +118,13 @@ public class LoginActivity extends AppCompatActivity {
 
         if (tvRegisterLink != null) tvRegisterLink.setOnClickListener(goToRegister);
         if (tvGoToRegister != null) tvGoToRegister.setOnClickListener(goToRegister);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            UIUtils.enableFullscreenImmersiveMode(this);
+        }
     }
 }

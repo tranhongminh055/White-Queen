@@ -29,8 +29,14 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.WhiteQueen.NoActionBar"
-            android:exported="false" />
+            android:exported="true" />
+
+        <activity
+            android:name=".ProductDetailActivity"
+            android:theme="@style/Theme.WhiteQueen.NoActionBar"
+            android:exported="true" />
             
     </application>
+
 
 </manifest>

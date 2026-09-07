@@ -23,4 +23,13 @@ public interface ApiService {
 
     @POST("users/logout")
     Call<Map<String, String>> logoutUser(@Body UserLogoutRequest request);
+
+    @retrofit2.http.GET("api/products/")
+    Call<com.whitequeen.app.models.ProductResponse> getProducts(
+        @retrofit2.http.Query("keyword") String keyword,
+        @retrofit2.http.Query("platform") String platform,
+        @retrofit2.http.Query("page") Integer page,
+        @retrofit2.http.Query("limit") Integer limit
+    );
 }
+
